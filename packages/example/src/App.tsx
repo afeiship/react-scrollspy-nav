@@ -1,5 +1,5 @@
-import ReactScrollSpyNav from '@jswork/react-component-library/src';
-import '@jswork/react-component-library/src/style.scss';
+import ReactScrollspyNav from '@jswork/react-scrollspy-nav/src';
+import '@jswork/react-scrollspy-nav/src/style.scss';
 
 function App() {
   return (
@@ -7,8 +7,8 @@ function App() {
       <div className="badge badge-warning absolute right-0 top-0 m-4">
         Build Time: {BUILD_TIME}
       </div>
-      <h1>react-component-library</h1>
-      <ReactScrollSpyNav />
+      <h1>react-scrollspy-nav</h1>
+      <ReactScrollspyNav />
       <button className='btn btn-info'>Button</button>
     </div>
   );

@@ -8,8 +8,8 @@ files:
   - '!rif.config.yaml'
 replacements:
   - from: /react-component-library-description/g
-    to: Balabala desc.
-  - from: React scrollspy nav component.
+    to: React scrollspy nav component.
+  - from: /react-component-library/g
     to: ${PROJECT_NAME}
   - from: /Anonymous/g
-    to: ReactScrollSpyNav
+    to: ReactScrollspyNav

@@ -19,7 +19,7 @@ nx.declare({
 
       nx.replaceInFile('README.md', [
         ['__GENERATE_DAPP__', indentString(docApp, 2).trimEnd()],
-        ['@jswork/react-component-library/src', '@jswork/react-component-library'],
+        ['@jswork/react-scrollspy-nav/src', '@jswork/react-scrollspy-nav'],
         ['src/style.scss', 'dist/style.scss'],
       ]);
     },

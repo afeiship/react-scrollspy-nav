@@ -1,2 +1,2 @@
-# react-component-library
-> Balabala desc.
+# react-scrollspy-nav
+> React scrollspy nav component.

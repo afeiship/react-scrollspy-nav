@@ -2,9 +2,9 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from "react";
 
-const CLASS_NAME = "react-component-library";
+const CLASS_NAME = "react-scrollspy-nav";
 // const uuid = () => Math.random().toString(36).substring(2, 9);
-export type ReactScrollSpyNavProps = {
+export type ReactScrollspyNavProps = {
   /**
    * The extended className for component.
    * @default ''
@@ -16,7 +16,7 @@ export type ReactScrollSpyNavProps = {
   children?: ReactNode;
 } & HTMLAttributes<HTMLDivElement>;
 
-export default class ReactScrollSpyNav extends Component<ReactScrollSpyNavProps> {
+export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps> {
   static displayName = CLASS_NAME;
   static version = "__VERSION__";
   static defaultProps = {};

@@ -1,7 +1,7 @@
-# react-component-library
-> Balabala desc.
+# react-scrollspy-nav
+> React scrollspy nav component.
 
 ## installation
 ```shell
-yarn add @jswork/react-component-library
+yarn add @jswork/react-scrollspy-nav
 ```

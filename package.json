@@ -1,7 +1,7 @@
 {
-  "name": "react-component-library",
+  "name": "react-scrollspy-nav",
   "version": "1.0.0",
-  "description": "Balabala desc.",
+  "description": "React scrollspy nav component.",
   "homepage": "https://js.work",
   "type": "module",
   "private": true,

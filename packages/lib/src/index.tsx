@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react';
 import cx from 'classnames';
 
-const CLASS_NAME = 'react-component-library';
+const CLASS_NAME = 'react-scrollspy-nav';
 
 export type IProps = {
   /**
@@ -16,7 +16,7 @@ export type IProps = {
   children?: React.ReactNode;
 } & HTMLAttributes<HTMLDivElement>;
 
-export default function ReactScrollSpyNav(props: IProps) {
+export default function ReactScrollspyNav(props: IProps) {
   const { className, ...rest } = props;
   return <div data-component={CLASS_NAME} className={cx(CLASS_NAME, className)} {...rest} />;
 }
