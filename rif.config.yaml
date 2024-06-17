@@ -1,0 +1,15 @@
+name: react-component-library
+files:
+  - 'packages/**/*.*'
+  - 'scripts/*'
+  - '.*'
+  - '*'
+  - '!node_modules'
+  - '!rif.config.yaml'
+replacements:
+  - from: /react-component-library-description/g
+    to: Balabala desc.
+  - from: React scrollspy nav component.
+    to: ${PROJECT_NAME}
+  - from: /Anonymous/g
+    to: ReactScrollSpyNav
