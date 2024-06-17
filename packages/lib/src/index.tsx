@@ -22,6 +22,11 @@ export type ReactScrollspyNavProps = {
    */
   className?: string;
   /**
+   * The className for active element.
+   * @default 'is-active'
+   */
+  activeClassName?: string;
+  /**
    * The className for nav element.
    * @default ''
    */
@@ -45,6 +50,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
   static defaultProps = {
+    activeClassName: 'is-active',
     items: [],
     offset: 0,
   };
@@ -86,7 +92,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   }
 
   render() {
-    const { className, children, items, navClassName, offset, ...rest } = this.props;
+    const { className, children, items, activeClassName, navClassName, offset, ...rest } =
+      this.props;
     return (
       <div data-component={CLASS_NAME} className={cx(CLASS_NAME, className)} {...rest}>
         <ul className={cx(navClassName, `${CLASS_NAME}__nav`)}>
@@ -94,7 +101,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
             return (
               <li
                 className={cx(`${CLASS_NAME}__item`, {
-                  'text-red-500': index === this.state.activeIndex,
+                  [activeClassName!]: index === this.state.activeIndex,
                 })}
                 key={index}
                 onClick={() => this.scrollTo(document.getElementById(item.value)!)}>

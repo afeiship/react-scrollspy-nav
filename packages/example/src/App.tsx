@@ -19,6 +19,7 @@ function App() {
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         items={items}
+        activeClassName="text-red-500"
         className="wp-8 mx-auto p-5"
         navClassName="layout-inline-items x-5 text-lg bg-gray-200 rounded-md p-4 sticky top-0 z-10">
         <ul>
