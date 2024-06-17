@@ -1,12 +1,20 @@
-// import noop from '@jswork/noop';
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
-// import { flushSync } from 'react-dom';
 
-// import ReactList, {TemplateArgs} from '@jswork/react-list';
+const throttle = (func, wait) => {
+  let timeout;
+  return function () {
+    const context = null;
+    const args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(context, args);
+    }, wait);
+  };
+};
 
 const CLASS_NAME = 'react-scrollspy-nav';
-// const uuid = () => Math.random().toString(36).substring(2, 9);
+
 export type ReactScrollspyNavProps = {
   /**
    * The extended className for component.
@@ -27,15 +35,6 @@ export type ReactScrollspyNavProps = {
    */
   items: any[];
   /**
-   * The template function for rendering items.
-   * @param args
-   */
-  // template?: (args: TemplateArgs) => ReactNode;
-  /**
-   * The reverse flag for navigation and children.
-   */
-  reverse?: boolean;
-  /**
    * The offset for scroll spy.
    * @default 0
    */
@@ -47,14 +46,13 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   static version = '__VERSION__';
   static defaultProps = {
     items: [],
-    offset: 10,
+    offset: 0,
   };
-
-  private ticking = false;
-  state = { activeIndex: 0 };
 
   constructor(props: ReactScrollspyNavProps) {
     super(props);
+    this.state = { activeIndex: 0 };
+    this.handleScroll = throttle(this.handleScroll, 10);
   }
 
   componentDidMount() {
@@ -66,35 +64,29 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   }
 
   handleScroll = () => {
-    if (!this.ticking) {
-      window.requestAnimationFrame(() => {
-        const elNav = document.querySelector(`.${CLASS_NAME}__nav`);
-        const elItems = document.querySelectorAll(`[data-spy-id]`);
-        if (!elNav || !elItems) return;
-        const bound = elNav.scrollTop;
-        const items = Array.from(elItems).map((el) => {
-          return Math.abs(el.getBoundingClientRect().top - bound);
-        });
-        const min = Math.min(...items);
-        const activeIndex = items.indexOf(min);
-        console.log('activeIndex:', activeIndex);
-        // Can't call setState on a component that is not yet mounted.
-        // This is a no-op, but it might indicate a bug in your application.
-        // Instead, assign to `this.state` directly or define a `state = {};` class property with the desired state in the react-scrollspy-nav component.
-        this.setState({ activeIndex });
-        this.ticking = false;
-      });
-      this.ticking = true;
-    }
+    const { offset } = this.props;
+    const elNav = document.querySelector(`.${CLASS_NAME}__nav`);
+    const elItems = document.querySelectorAll(`[data-spy-id]`);
+    if (!elNav || !elItems) return;
+    const bound = elNav.scrollTop;
+    const items = Array.from(elItems).map((el) => {
+      return Math.abs(el.getBoundingClientRect().top - bound - offset!);
+    });
+    const min = Math.min(...items);
+    const activeIndex = items.indexOf(min);
+    this.setState({ activeIndex });
   };
 
   private scrollTo(element: HTMLElement) {
-    const topOfElement = window.scrollY + element.getBoundingClientRect().top - 60;
+    const { offset } = this.props;
+    const navElement = document.querySelector(`.${CLASS_NAME}__nav`);
+    const topOfElement =
+      window.scrollY + element.getBoundingClientRect().top - navElement!.clientHeight - offset!;
     window.scrollTo({ top: topOfElement, behavior: 'smooth' });
   }
 
   render() {
-    const { className, children, items, navClassName, reverse, ...rest } = this.props;
+    const { className, children, items, navClassName, offset, ...rest } = this.props;
     return (
       <div data-component={CLASS_NAME} className={cx(CLASS_NAME, className)} {...rest}>
         <ul className={cx(navClassName, `${CLASS_NAME}__nav`)}>
