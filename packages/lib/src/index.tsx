@@ -4,7 +4,16 @@ import ReactList, { TemplateArgs } from '@jswork/react-list';
 import ScrolledEvent from '@jswork/scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
-const LOCAL_KEY = '__DATA_SPY_KEY__';
+const Storage = {
+  set: (id: string, value: number) => {
+    const key = [CLASS_NAME, id].filter(Boolean).join(':');
+    localStorage.setItem(key, value.toString());
+  },
+  get: (id: string) => {
+    const key = [CLASS_NAME, id].filter(Boolean).join(':');
+    return parseInt(localStorage.getItem(key) as string) || 0;
+  },
+};
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
@@ -12,6 +21,7 @@ export type ScrollspyTemplate = (
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
+  id?: string;
   /**
    * The extended className for component.
    * @default ''
@@ -50,6 +60,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
   static defaultProps = {
+    id: '@',
     offset: 0,
     container: window,
   };
@@ -63,7 +74,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
 
   constructor(props: ReactScrollspyNavProps) {
     super(props);
-    const activeIndex = parseInt(localStorage.getItem(LOCAL_KEY) as any) || 0;
+    const { id } = props;
+    const activeIndex = Storage.get(id!);
     this.state = { activeIndex };
   }
 
@@ -77,7 +89,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   }
 
   handleScroll = () => {
-    const { offset } = this.props;
+    const { id, offset } = this.props;
     const elNav = document.querySelector(`.${CLASS_NAME}__nav`);
     const elItems = document.querySelectorAll(`[data-spy-id]`);
     if (!elNav || !elItems) return;
@@ -88,7 +100,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
-    localStorage.setItem(LOCAL_KEY, activeIndex.toString());
+    Storage.set(id!, activeIndex);
   };
 
   private scrollTo(element?: HTMLElement) {
