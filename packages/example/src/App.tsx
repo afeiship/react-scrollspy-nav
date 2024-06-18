@@ -17,7 +17,10 @@ function App() {
 
   const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
     return (
-      <div className={cx({ 'text-red-500': active })} key={index} onClick={cb}>
+      <div
+        className={cx({ 'btn-secondary': active }, 'btn btn-sm text-xl')}
+        key={index}
+        onClick={cb}>
         {item.label}
       </div>
     );
@@ -30,8 +33,8 @@ function App() {
       <ReactScrollspyNav
         items={items}
         template={template}
-        className="wp-8 mx-auto p-5"
-        navClassName="layout-inline-items x-5 text-lg bg-gray-200 rounded-md p-4 sticky top-0 z-10">
+        className="wp-8 mx-auto p-5 max-w-[600px] bg-slate-200"
+        navClassName="navbar bg-base-100 sticky top-0 z-10 gap-2 rounded-md">
         <ul>
           <h3 className="text-red-600" data-spy-id="home" id="home">
             Home

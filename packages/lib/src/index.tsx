@@ -100,12 +100,16 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   handleTemplate = ({ item, index }) => {
     const { template } = this.props;
     const active = index === this.state.activeIndex;
-    const cb = () => this.scrollTo(this.spyElements[index]);
+    const cb = () => {
+      this.setState({ activeIndex: index });
+      this.scrollTo(this.spyElements[index]);
+    };
     return template({ item, index, active }, cb);
   };
 
   render() {
-    const { className, children, items, template, navClassName, offset, ...rest } = this.props;
+    const { className, children, items, template, navClassName, offset, container, ...rest } =
+      this.props;
     return (
       <div
         ref={this.rootRef}
