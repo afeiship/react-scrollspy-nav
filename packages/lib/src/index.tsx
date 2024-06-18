@@ -92,8 +92,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     if (!element) return;
     const { offset } = this.props;
     const navElement = document.querySelector(`.${CLASS_NAME}__nav`);
-    const topOfElement =
-      window.scrollY + element.getBoundingClientRect().top - navElement!.clientHeight - offset!;
+    const elementRect = element.getBoundingClientRect();
+    const topOfElement = window.scrollY + elementRect.top - navElement!.clientHeight - offset!;
     window.scrollTo({ top: topOfElement, behavior: 'smooth' });
   }
 

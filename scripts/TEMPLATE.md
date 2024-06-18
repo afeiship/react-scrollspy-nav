@@ -8,7 +8,7 @@
 
 ## installation
 ```shell
-npm install -S @jswork/react-scrollspy-nav
+yarn add @jswork/react-scrollspy-nav
 ```
 
 ## usage
