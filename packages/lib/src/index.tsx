@@ -4,6 +4,7 @@ import ReactList, { TemplateArgs } from '@jswork/react-list';
 import ScrolledEvent from '@jswork/scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
+const LOCAL_KEY = '__DATA_SPY_KEY__';
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
@@ -62,7 +63,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
 
   constructor(props: ReactScrollspyNavProps) {
     super(props);
-    this.state = { activeIndex: 0 };
+    const activeIndex = parseInt(localStorage.getItem(LOCAL_KEY) as any) || 0;
+    this.state = { activeIndex };
   }
 
   componentDidMount() {
@@ -86,6 +88,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
+    localStorage.setItem(LOCAL_KEY, activeIndex.toString());
   };
 
   private scrollTo(element?: HTMLElement) {
