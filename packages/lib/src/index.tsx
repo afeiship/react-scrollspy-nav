@@ -1,17 +1,6 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
-
-const throttle = (func, wait) => {
-  let timeout;
-  return function () {
-    const context = null;
-    const args = arguments;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func.apply(context, args);
-    }, wait);
-  };
-};
+import ScrolledEvent, { Destroyable } from './scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
 
@@ -31,6 +20,16 @@ export type ReactScrollspyNavProps = {
    * @default ''
    */
   navClassName?: string;
+  /**
+   * The className for nav item element.
+   * @default ''
+   */
+  navItemClassName?: string;
+  /**
+   * The scroll container element.
+   * @default window
+   */
+  container?: HTMLElement | Window;
   /**
    * The children element.
    */
@@ -53,20 +52,28 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     activeClassName: 'is-active',
     items: [],
     offset: 0,
+    container: window,
   };
+
+  private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
+  private scrolledEvent: Destroyable | null = null;
+
+  get spyElements() {
+    return document.querySelectorAll(`[data-spy-id]`) as NodeListOf<HTMLElement>;
+  }
 
   constructor(props: ReactScrollspyNavProps) {
     super(props);
     this.state = { activeIndex: 0 };
-    this.handleScroll = throttle(this.handleScroll, 10);
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
+    const { container } = this.props;
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { interval: 20, element: container });
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    this.scrolledEvent?.destroy();
   }
 
   handleScroll = () => {
@@ -83,7 +90,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     this.setState({ activeIndex });
   };
 
-  private scrollTo(element: HTMLElement) {
+  private scrollTo(element?: HTMLElement) {
+    if (!element) return;
     const { offset } = this.props;
     const navElement = document.querySelector(`.${CLASS_NAME}__nav`);
     const topOfElement =
@@ -92,20 +100,35 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   }
 
   render() {
-    const { className, children, items, activeClassName, navClassName, offset, ...rest } =
-      this.props;
+    const {
+      className,
+      children,
+      items,
+      activeClassName,
+      navClassName,
+      navItemClassName,
+      offset,
+      ...rest
+    } = this.props;
     return (
-      <div data-component={CLASS_NAME} className={cx(CLASS_NAME, className)} {...rest}>
+      <div
+        ref={this.rootRef}
+        data-component={CLASS_NAME}
+        className={cx(CLASS_NAME, className)}
+        {...rest}>
         <ul className={cx(navClassName, `${CLASS_NAME}__nav`)}>
           {items.map((item, index) => {
             return (
               <li
-                className={cx(`${CLASS_NAME}__item`, {
+                className={cx(`${CLASS_NAME}__item`, navItemClassName, {
                   [activeClassName!]: index === this.state.activeIndex,
                 })}
                 key={index}
-                onClick={() => this.scrollTo(document.getElementById(item.value)!)}>
-                <a>{item.label}</a>
+                onClick={() => {
+                  const els = this.spyElements;
+                  return this.scrollTo(els[index]);
+                }}>
+                {item.label}
               </li>
             );
           })}

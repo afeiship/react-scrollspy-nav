@@ -16,7 +16,6 @@
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
