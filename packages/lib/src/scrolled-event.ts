@@ -1,4 +1,4 @@
-const throttle = (fn, wait: number = 100) => {
+const throttle = (fn: Function, wait: number = 100) => {
   let timeout = 0;
   return function () {
     const context = this;
@@ -20,7 +20,7 @@ export interface Destroyable {
 }
 
 const defaultOptions: ScrolledEventOptions = {
-  interval: 100,
+  interval: 20,
   element: window,
 };
 

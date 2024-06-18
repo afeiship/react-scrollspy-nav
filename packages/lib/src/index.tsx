@@ -1,8 +1,14 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
+import ReactList, { TemplateArgs } from '@jswork/react-list';
 import ScrolledEvent, { Destroyable } from './scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
+
+export type ScrollspyTemplate = (
+  args: Partial<TemplateArgs> & { active: boolean },
+  cb: () => void
+) => ReactNode;
 
 export type ReactScrollspyNavProps = {
   /**
@@ -11,20 +17,10 @@ export type ReactScrollspyNavProps = {
    */
   className?: string;
   /**
-   * The className for active element.
-   * @default 'is-active'
-   */
-  activeClassName?: string;
-  /**
    * The className for nav element.
    * @default ''
    */
   navClassName?: string;
-  /**
-   * The className for nav item element.
-   * @default ''
-   */
-  navItemClassName?: string;
   /**
    * The scroll container element.
    * @default window
@@ -39,6 +35,10 @@ export type ReactScrollspyNavProps = {
    */
   items: any[];
   /**
+   * The template function for rendering each item.
+   */
+  template: ScrollspyTemplate;
+  /**
    * The offset for scroll spy.
    * @default 0
    */
@@ -49,8 +49,6 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
   static defaultProps = {
-    activeClassName: 'is-active',
-    items: [],
     offset: 0,
     container: window,
   };
@@ -69,7 +67,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
 
   componentDidMount() {
     const { container } = this.props;
-    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { interval: 20, element: container });
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: container });
   }
 
   componentWillUnmount() {
@@ -99,40 +97,24 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     window.scrollTo({ top: topOfElement, behavior: 'smooth' });
   }
 
+  handleTemplate = ({ item, index }) => {
+    const { template } = this.props;
+    const active = index === this.state.activeIndex;
+    const cb = () => this.scrollTo(this.spyElements[index]);
+    return template({ item, index, active }, cb);
+  };
+
   render() {
-    const {
-      className,
-      children,
-      items,
-      activeClassName,
-      navClassName,
-      navItemClassName,
-      offset,
-      ...rest
-    } = this.props;
+    const { className, children, items, template, navClassName, offset, ...rest } = this.props;
     return (
       <div
         ref={this.rootRef}
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
         {...rest}>
-        <ul className={cx(navClassName, `${CLASS_NAME}__nav`)}>
-          {items.map((item, index) => {
-            return (
-              <li
-                className={cx(`${CLASS_NAME}__item`, navItemClassName, {
-                  [activeClassName!]: index === this.state.activeIndex,
-                })}
-                key={index}
-                onClick={() => {
-                  const els = this.spyElements;
-                  return this.scrollTo(els[index]);
-                }}>
-                {item.label}
-              </li>
-            );
-          })}
-        </ul>
+        <nav className={cx(navClassName, `${CLASS_NAME}__nav`)}>
+          <ReactList items={items} template={this.handleTemplate} />
+        </nav>
         {children}
       </div>
     );

@@ -1,5 +1,7 @@
-import ReactScrollspyNav from '@jswork/react-scrollspy-nav/src';
+import ReactScrollspyNav, { ScrollspyTemplate } from '@jswork/react-scrollspy-nav/src';
 import '@jswork/react-scrollspy-nav/src/style.scss';
+import cx from 'classnames';
+import React from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -13,13 +15,21 @@ function App() {
     { label: 'Contact', value: 'contact' },
   ];
 
+  const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
+    return (
+      <div className={cx({ 'text-red-500': active })} key={index} onClick={cb}>
+        {item.label}
+      </div>
+    );
+  };
+
   return (
     <div className="m-10 p-4 shadow bg-gray-100 text-gray-800 hover:shadow-md transition-all">
       <div className="badge badge-warning absolute right-0 top-0 m-4">Build Time: {BUILD_TIME}</div>
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         items={items}
-        activeClassName="text-red-500"
+        template={template}
         className="wp-8 mx-auto p-5"
         navClassName="layout-inline-items x-5 text-lg bg-gray-200 rounded-md p-4 sticky top-0 z-10">
         <ul>
