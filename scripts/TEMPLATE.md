@@ -12,14 +12,6 @@ npm install -S @jswork/react-scrollspy-nav
 ```
 
 ## usage
-1. import css
-  ```scss
-  @import "~@jswork/react-scrollspy-nav/dist/style.css";
-
-  // or use sass
-  @import "~@jswork/react-scrollspy-nav/dist/style.scss";
-  ```
-2. import js
   ```js
 __GENERATE_DAPP__
   ```
