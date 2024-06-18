@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
 import ReactList, { TemplateArgs } from '@jswork/react-list';
-import ScrolledEvent, { Destroyable } from './scrolled-event';
+import ScrolledEvent from '@jswork/scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
 
@@ -54,7 +54,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
   };
 
   private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
-  private scrolledEvent: Destroyable | null = null;
+  private scrolledEvent: any | null = null;
 
   get spyElements() {
     return document.querySelectorAll(`[data-spy-id]`) as NodeListOf<HTMLElement>;

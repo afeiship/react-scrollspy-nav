@@ -33,6 +33,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@jswork/react-list": "^1.2.3"
+    "@jswork/react-list": "^1.2.3",
+    "@jswork/scrolled-event": "^1.0.2"
   }
 }
