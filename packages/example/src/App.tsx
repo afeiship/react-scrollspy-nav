@@ -9,7 +9,8 @@ import React, { useState } from 'react';
 
 function App() {
   const items = ['Home', 'About', 'Services', 'Contact'];
-  const [useRoot, setUseRoot] = useState(false);
+  const [useRoot, setUseRoot] = useState(true);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
     return (
@@ -23,7 +24,11 @@ function App() {
   };
 
   return (
-    <div className="m-10 p-4 shadow bg-gray-100 text-gray-80">
+    <div
+      className={cx('m-10 p-6 shadow bg-gray-100 text-gray-80', {
+        'h-[600px] overflow-y-auto': useRoot,
+      })}
+      ref={containerRef}>
       <div className="badge badge-warning absolute right-0 top-0 m-4">Build Time: {BUILD_TIME}</div>
       <label htmlFor="">
         <span>UseRoot: {useRoot}</span>
@@ -31,13 +36,12 @@ function App() {
       </label>
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
-        useRoot={useRoot}
+        data-root={useRoot}
+        containerRef={useRoot ? containerRef : undefined}
         items={items}
         template={template}
-        className={cx('wp-8 mx-auto p-5 max-w-[600px] bg-slate-200 ', {
-          'h-[600px] overflow-y-auto': useRoot,
-        })}
-        navClassName="navbar bg-base-100 sticky top-0 z-10 gap-2 rounded-md shadow-md">
+        className={cx('wp-8 p-5 mx-auto max-w-[600px] bg-slate-200')}
+        navClassName="navbar bg-base-100 sticky top-2 z-10 gap-2 rounded-md shadow-md">
         <ul>
           <h3 className="text-red-600" data-spy-id="home" id="home">
             Home
