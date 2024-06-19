@@ -57,7 +57,14 @@ export type ReactScrollspyNavProps = {
   offset?: number;
 } & HTMLAttributes<HTMLDivElement>;
 
-export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps, any> {
+interface ReactScrollspyNavState {
+  activeIndex: number;
+}
+
+export default class ReactScrollspyNav extends Component<
+  ReactScrollspyNavProps,
+  ReactScrollspyNavState
+> {
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
   static defaultProps = {
@@ -105,7 +112,7 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
     Storage.set(id!, activeIndex);
   };
 
-  private scrollTo(element?: HTMLElement) {
+  scrollTo(element?: HTMLElement) {
     if (!element) return;
     const { offset } = this.props;
     const navElement = document.querySelector(`.${CLASS_NAME}__nav`);
@@ -116,7 +123,8 @@ export default class ReactScrollspyNav extends Component<ReactScrollspyNavProps,
 
   handleTemplate = ({ item, index }) => {
     const { template } = this.props;
-    const active = index === this.state.activeIndex;
+    const { activeIndex } = this.state;
+    const active = index === activeIndex;
     const cb = () => {
       this.setState({ activeIndex: index });
       this.scrollTo(this.spyElements[index]);
