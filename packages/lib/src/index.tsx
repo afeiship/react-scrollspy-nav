@@ -5,12 +5,13 @@ import ScrolledEvent from '@jswork/scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
 const Storage = {
+  getKey: (id: string) => [CLASS_NAME, id].filter(Boolean).join(':'),
   set: (id: string, value: number) => {
-    const key = [CLASS_NAME, id].filter(Boolean).join(':');
+    const key = Storage.getKey(id);
     localStorage.setItem(key, value.toString());
   },
   get: (id: string) => {
-    const key = [CLASS_NAME, id].filter(Boolean).join(':');
+    const key = Storage.getKey(id);
     return parseInt(localStorage.getItem(key) as string) || 0;
   },
 };
