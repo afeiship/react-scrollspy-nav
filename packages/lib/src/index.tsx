@@ -95,10 +95,7 @@ export default class ReactScrollspyNav extends Component<
 
   get container() {
     const { containerRef } = this.props;
-    if (containerRef) {
-      return containerRef.current;
-    }
-    return window;
+    return containerRef ? containerRef.current : window;
   }
 
   constructor(props: ReactScrollspyNavProps) {
