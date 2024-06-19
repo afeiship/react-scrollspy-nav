@@ -1,7 +1,7 @@
 import ReactScrollspyNav, { ScrollspyTemplate } from '@jswork/react-scrollspy-nav/src';
 import '@jswork/react-scrollspy-nav/src/style.scss';
 import cx from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -9,6 +9,7 @@ import React from 'react';
 
 function App() {
   const items = ['Home', 'About', 'Services', 'Contact'];
+  const [useRoot, setUseRoot] = useState(false);
 
   const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
     return (
@@ -24,11 +25,18 @@ function App() {
   return (
     <div className="m-10 p-4 shadow bg-gray-100 text-gray-80">
       <div className="badge badge-warning absolute right-0 top-0 m-4">Build Time: {BUILD_TIME}</div>
+      <label htmlFor="">
+        <span>UseRoot: {useRoot}</span>
+        <input type="checkbox" checked={useRoot} onChange={(e) => setUseRoot(e.target.checked)} />
+      </label>
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
+        useRoot={useRoot}
         items={items}
         template={template}
-        className="wp-8 mx-auto p-5 max-w-[600px] bg-slate-200"
+        className={cx('wp-8 mx-auto p-5 max-w-[600px] bg-slate-200 ', {
+          'h-[600px] overflow-y-auto': useRoot,
+        })}
         navClassName="navbar bg-base-100 sticky top-0 z-10 gap-2 rounded-md shadow-md">
         <ul>
           <h3 className="text-red-600" data-spy-id="home" id="home">

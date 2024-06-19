@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void
+  cb: () => void,
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -34,10 +34,10 @@ export type ReactScrollspyNavProps = {
    */
   navClassName?: string;
   /**
-   * The scroll container element.
-   * @default window
+   * The container element for spy.
+   * @default null
    */
-  container?: HTMLElement | Window;
+  useRoot?: boolean
   /**
    * The children element.
    */
@@ -70,7 +70,7 @@ export default class ReactScrollspyNav extends Component<
   static defaultProps = {
     id: '@',
     offset: 0,
-    container: window,
+    container: null,
   };
 
   private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
@@ -80,6 +80,18 @@ export default class ReactScrollspyNav extends Component<
     return document.querySelectorAll(`[data-spy-id]`) as NodeListOf<HTMLElement>;
   }
 
+  get container() {
+    const { useRoot } = this.props;
+    if (!useRoot) return document.querySelector('html') as HTMLElement;
+    return this.rootRef.current;
+  }
+
+  get scrollContainer() {
+    const { useRoot } = this.props;
+    if (!useRoot) return window;
+    return this.rootRef.current;
+  }
+
   constructor(props: ReactScrollspyNavProps) {
     super(props);
     const { id } = props;
@@ -87,9 +99,19 @@ export default class ReactScrollspyNav extends Component<
     this.state = { activeIndex };
   }
 
+  initEvents = () => {
+    this.scrolledEvent?.destroy();
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: this.scrollContainer! });
+  };
+
+  componentDidUpdate(prevProps: Readonly<ReactScrollspyNavProps>) {
+    if (prevProps.useRoot !== this.props.useRoot) {
+      this.initEvents();
+    }
+  }
+
   componentDidMount() {
-    const { container } = this.props;
-    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: container });
+    this.initEvents();
   }
 
   componentWillUnmount() {
@@ -98,7 +120,7 @@ export default class ReactScrollspyNav extends Component<
 
   handleScroll = () => {
     const { id, offset } = this.props;
-    const elNav = document.querySelector(`.${CLASS_NAME}__nav`);
+    const elNav = this.container!.querySelector(`.${CLASS_NAME}__nav`);
     const elItems = document.querySelectorAll(`[data-spy-id]`);
     if (!elNav || !elItems) return;
     const bound = elNav.scrollTop;
@@ -115,10 +137,11 @@ export default class ReactScrollspyNav extends Component<
   scrollTo(element?: HTMLElement) {
     if (!element) return;
     const { offset } = this.props;
-    const navElement = document.querySelector(`.${CLASS_NAME}__nav`);
+    const navElement = this.container!.querySelector(`.${CLASS_NAME}__nav`);
     const elementRect = element.getBoundingClientRect();
-    const topOfElement = window.scrollY + elementRect.top - navElement!.clientHeight - offset!;
-    window.scrollTo({ top: topOfElement, behavior: 'smooth' });
+    const navRect = navElement!.getBoundingClientRect();
+    const topOfElement = this.container!.scrollTop + elementRect.top - navRect.bottom - offset!;
+    this.container!.scrollTo({ top: topOfElement, behavior: 'smooth' });
   }
 
   handleTemplate = ({ item, index }) => {
@@ -133,7 +156,7 @@ export default class ReactScrollspyNav extends Component<
   };
 
   render() {
-    const { className, children, items, template, navClassName, offset, container, ...rest } =
+    const { className, children, items, template, navClassName, offset, useRoot, ...rest } =
       this.props;
     return (
       <div
