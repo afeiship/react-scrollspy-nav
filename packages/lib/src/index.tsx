@@ -43,6 +43,10 @@ export type ReactScrollspyNavProps = {
    */
   children?: ReactNode;
   /**
+   * The header element.
+   */
+  header?: ReactNode;
+  /**
    * The items of spy navigation.
    */
   items: any[];
@@ -156,7 +160,17 @@ export default class ReactScrollspyNav extends Component<
   };
 
   render() {
-    const { className, children, items, template, navClassName, offset, useRoot, ...rest } =
+    const {
+      className,
+      header,
+      children,
+      items,
+      template,
+      navClassName,
+      offset,
+      useRoot,
+      ...rest
+    } =
       this.props;
     return (
       <div
@@ -164,6 +178,7 @@ export default class ReactScrollspyNav extends Component<
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
         {...rest}>
+        {header}
         <nav className={cx(navClassName, `${CLASS_NAME}__nav`)}>
           <ReactList items={items} template={this.handleTemplate} />
         </nav>
