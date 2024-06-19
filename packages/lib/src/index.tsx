@@ -80,11 +80,13 @@ export default class ReactScrollspyNav extends Component<
   }
 
   get containerPaddingTop() {
-    return parseInt(window.getComputedStyle(this.scrolledEvent!.target).paddingTop) || 0;
+    if (!this.scrolledEvent!.target) return 0;
+    return parseInt(window.getComputedStyle(this.scrolledEvent!.target)?.paddingTop) || 0;
   }
 
   get navTop() {
-    return parseInt(window.getComputedStyle(this.navRef.current!).top) || 0;
+    if (!this.navRef.current) return 0;
+    return parseInt(window.getComputedStyle(this.navRef.current!)?.top) || 0;
   }
 
   get spyElements() {
@@ -109,6 +111,7 @@ export default class ReactScrollspyNav extends Component<
   initEvents = () => {
     this.scrolledEvent?.destroy();
     this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: this.container! });
+    this.scrollTo(this.spyElements[this.state.activeIndex]);
   };
 
   componentDidMount() {
