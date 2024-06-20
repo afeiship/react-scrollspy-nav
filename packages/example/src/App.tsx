@@ -1,7 +1,7 @@
 import ReactScrollspyNav, { ScrollspyTemplate } from '@jswork/react-scrollspy-nav/src';
 import '@jswork/react-scrollspy-nav/src/style.scss';
 import cx from 'classnames';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -11,6 +11,7 @@ function App() {
   const items = ['Home', 'About', 'Services', 'Contact'];
   const [useRoot, setUseRoot] = useState(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const [dom, setDom] = useState<HTMLDivElement | null>(null);
 
   const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
     return (
@@ -22,6 +23,10 @@ function App() {
       </div>
     );
   };
+
+  useEffect(()=>{
+    setDom(containerRef.current);
+  },[containerRef])
 
   return (
     <div
@@ -37,7 +42,7 @@ function App() {
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         data-root={useRoot}
-        containerRef={useRoot ? containerRef : undefined}
+        containerElement={dom!}
         items={items}
         template={template}
         className={cx('wp-8 p-5 mx-auto max-w-[600px] bg-slate-200')}

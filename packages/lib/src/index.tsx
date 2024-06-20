@@ -36,7 +36,7 @@ export type ReactScrollspyNavProps = {
   /**
    * The container element for spy.
    */
-  containerRef?: React.RefObject<HTMLElement>;
+  containerElement?: HTMLElement;
   /**
    * The children element.
    */
@@ -94,8 +94,9 @@ export default class ReactScrollspyNav extends Component<
   }
 
   get container() {
-    const { containerRef } = this.props;
-    return containerRef ? containerRef.current : window;
+    const { containerElement } = this.props;
+    if(!containerElement) return window;
+    return this.props.containerElement;
   }
 
   constructor(props: ReactScrollspyNavProps) {
@@ -116,8 +117,8 @@ export default class ReactScrollspyNav extends Component<
   }
 
   componentDidUpdate(prevProps: Readonly<ReactScrollspyNavProps>) {
-    const { containerRef } = this.props;
-    if (containerRef && prevProps.containerRef?.current !== containerRef.current) {
+    const { containerElement } = this.props;
+    if (containerElement !== prevProps.containerElement) {
       this.initEvents();
     }
   }
@@ -161,7 +162,7 @@ export default class ReactScrollspyNav extends Component<
   };
 
   render() {
-    const { className, children, items, template, navClassName, offset, containerRef, ...rest } =
+    const { className, children, items, template, navClassName, offset, containerElement, ...rest } =
       this.props;
     return (
       <section
