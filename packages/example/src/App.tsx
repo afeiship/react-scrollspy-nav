@@ -24,9 +24,9 @@ function App() {
     );
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setDom(containerRef.current);
-  },[containerRef])
+  }, [containerRef]);
 
   return (
     <div
@@ -42,6 +42,7 @@ function App() {
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         data-root={useRoot}
+        offset={0}
         containerElement={dom!}
         items={items}
         template={template}

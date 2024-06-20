@@ -95,7 +95,7 @@ export default class ReactScrollspyNav extends Component<
 
   get container() {
     const { containerElement } = this.props;
-    if(!containerElement) return window;
+    if (!containerElement) return window;
     return this.props.containerElement;
   }
 
@@ -145,8 +145,9 @@ export default class ReactScrollspyNav extends Component<
 
   scrollTo(element?: HTMLElement) {
     if (!element) return;
-    const navOffset = this.navRef.current!.scrollHeight + this.navTop;
-    element.style.scrollMarginTop = navOffset + this.containerPaddingTop + 'px';
+    const { offset } = this.props;
+    const navOffset = this.navRef.current!.scrollHeight + this.navTop + this.containerPaddingTop + offset!;
+    element.style.scrollMarginTop = navOffset + 'px';
     element.scrollIntoView({ behavior: 'smooth' });
   }
 
