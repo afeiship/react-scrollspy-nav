@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void,
+  cb: () => void
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -146,7 +146,8 @@ export default class ReactScrollspyNav extends Component<
   scrollTo(element?: HTMLElement) {
     if (!element) return;
     const { offset } = this.props;
-    const navOffset = this.navRef.current!.scrollHeight + this.navTop + this.containerPaddingTop + offset!;
+    const styleTop = this.navTop + this.containerPaddingTop;
+    const navOffset = this.navRef.current!.scrollHeight + styleTop + offset!;
     element.style.scrollMarginTop = navOffset + 'px';
     element.scrollIntoView({ behavior: 'smooth' });
   }
@@ -163,8 +164,16 @@ export default class ReactScrollspyNav extends Component<
   };
 
   render() {
-    const { className, children, items, template, navClassName, offset, containerElement, ...rest } =
-      this.props;
+    const {
+      className,
+      children,
+      items,
+      template,
+      navClassName,
+      offset,
+      containerElement,
+      ...rest
+    } = this.props;
     return (
       <section
         ref={this.rootRef}
