@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void
+  cb: () => void,
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -117,7 +117,7 @@ export default class ReactScrollspyNav extends Component<
 
   componentDidUpdate(prevProps: Readonly<ReactScrollspyNavProps>) {
     const { containerRef } = this.props;
-    if (containerRef && prevProps.containerRef !== containerRef) {
+    if (containerRef && prevProps.containerRef?.current !== containerRef.current) {
       this.initEvents();
     }
   }
