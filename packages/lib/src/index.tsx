@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void,
+  cb: () => void
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -185,9 +185,14 @@ export default class ReactScrollspyNav extends Component<
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
         {...rest}>
-        <div ref={this.navRef} className={cx(navClassName, `${CLASS_NAME}__nav`)}>
-          <ReactList items={items} template={this.handleTemplate} {...listProps} />
-        </div>
+        <ReactList
+          as="div"
+          className={navClassName}
+          forwardedRef={this.navRef}
+          items={items}
+          template={this.handleTemplate}
+          {...listProps}
+        />
         {children}
       </section>
     );
