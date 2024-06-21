@@ -43,7 +43,7 @@ function App() {
       <ReactScrollspyNav
         data-root={useRoot}
         offset={0}
-        containerElement={dom!}
+        containerElement={useRoot ? dom : null}
         items={items}
         template={template}
         className={cx('wp-8 p-5 mx-auto max-w-[600px] bg-slate-200')}

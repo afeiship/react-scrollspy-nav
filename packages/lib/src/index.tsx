@@ -36,7 +36,7 @@ export type ReactScrollspyNavProps = {
   /**
    * The container element for spy.
    */
-  containerElement?: HTMLElement;
+  containerElement?: HTMLElement | null;
   /**
    * The children element.
    */
