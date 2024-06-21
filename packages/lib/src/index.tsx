@@ -1,6 +1,6 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
-import ReactList, { TemplateArgs } from '@jswork/react-list';
+import ReactList, { TemplateArgs, ReactListProps } from '@jswork/react-list';
 import ScrolledEvent, { EventResponse } from '@jswork/scrolled-event';
 
 const CLASS_NAME = 'react-scrollspy-nav';
@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void
+  cb: () => void,
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -49,6 +49,10 @@ export type ReactScrollspyNavProps = {
    * The template function for rendering each item.
    */
   template: ScrollspyTemplate;
+  /**
+   * The props for react-list component.
+   */
+  listProps?: Omit<ReactListProps, 'items' | 'template'>;
   /**
    * The offset for scroll spy.
    * @default 0
@@ -169,6 +173,7 @@ export default class ReactScrollspyNav extends Component<
       children,
       items,
       template,
+      listProps,
       navClassName,
       offset,
       containerElement,
@@ -181,7 +186,7 @@ export default class ReactScrollspyNav extends Component<
         className={cx(CLASS_NAME, className)}
         {...rest}>
         <div ref={this.navRef} className={cx(navClassName, `${CLASS_NAME}__nav`)}>
-          <ReactList items={items} template={this.handleTemplate} />
+          <ReactList items={items} template={this.handleTemplate} {...listProps} />
         </div>
         {children}
       </section>
