@@ -18,7 +18,7 @@ const Storage = {
 
 export type ScrollspyTemplate = (
   args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void
+  cb: () => void,
 ) => ReactNode;
 
 export type ReactScrollspyNavProps = {
@@ -52,7 +52,7 @@ export type ReactScrollspyNavProps = {
   /**
    * The props for react-list component.
    */
-  listProps?: ReactListProps;
+  listProps?: Omit<ReactListProps, 'items' | 'template'>;
   /**
    * The offset for scroll spy.
    * @default 0
