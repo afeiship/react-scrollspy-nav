@@ -20,7 +20,7 @@ function App() {
         className={cx({ 'btn-secondary': active }, 'btn btn-sm text-xl')}
         key={index}
         onClick={() => {
-          nx.$rcn.event.emit('@:anchor', index);
+          ReactScrollspyNav.event.emit('@:anchor', index);
           console.log('go to !', index);
         }}>
         {item}

@@ -9,8 +9,7 @@
   "license": "MIT",
   "files": [
     "dist",
-    "src",
-    "global.d.ts"
+    "src"
   ],
   "scripts": {
     "build": "tsup",
@@ -33,8 +32,8 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@jswork/harmony-events": "^1.0.8",
-    "@jswork/scrolled-event": "^1.0.5"
+    "@jswork/harmony-events": "^1.1.1",
+    "@jswork/scrolled-event": "^1.0.6"
   },
   "keywords": [
     "react",

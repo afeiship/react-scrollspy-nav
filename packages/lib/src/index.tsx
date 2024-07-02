@@ -1,7 +1,8 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
 import ScrolledEvent, { EventResponse } from '@jswork/scrolled-event';
-import HarmonyEvents from '@jswork/harmony-events';
+import { ReactHarmonyEvents } from '@jswork/harmony-events';
+import type { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-scrollspy-nav';
 const Storage = {
@@ -21,10 +22,6 @@ export type ReactScrollspyNavProps = {
    * The unique id for component.
    */
   name?: string;
-  /**
-   * The harmony mode for component.
-   */
-  harmony?: boolean;
   /**
    * The extended className for component.
    * @default ''
@@ -60,6 +57,8 @@ export default class ReactScrollspyNav extends Component<
 > {
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
+  static event: EventMittNamespace.EventMitt;
+  static events = ['anchor'];
   static defaultProps = {
     name: '@',
     offset: 0,
@@ -68,8 +67,7 @@ export default class ReactScrollspyNav extends Component<
   private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
   private navRef: React.RefObject<HTMLDivElement> = React.createRef();
   private scrolledEvent: EventResponse | null = null;
-  private harmonyEvents: HarmonyEvents | null = null;
-
+  private harmonyEvents: ReactHarmonyEvents | null = null;
 
   get root() {
     return this.rootRef.current;
@@ -100,13 +98,7 @@ export default class ReactScrollspyNav extends Component<
     const { id } = props;
     const activeIndex = Storage.get(id!);
     this.state = { activeIndex };
-    this.harmonyEvents = new HarmonyEvents({
-      harmony: true,
-      name: props.name,
-      context: this,
-      ns: '$rcn',
-      items: ['anchor'],
-    });
+    this.harmonyEvents = new ReactHarmonyEvents({ name: props.name, context: this });
   }
 
   initEvents = () => {
@@ -156,6 +148,7 @@ export default class ReactScrollspyNav extends Component<
     element.scrollIntoView({ behavior: 'smooth' });
   }
 
+  // ------- public methods for harmony events -------
   anchor(index: number) {
     this.setState({ activeIndex: index });
     this.scrollTo(this.spyElements[index]);
