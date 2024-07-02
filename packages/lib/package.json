@@ -1,6 +1,6 @@
 {
   "name": "@jswork/react-scrollspy-nav",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,8 @@
   "license": "MIT",
   "files": [
     "dist",
-    "src"
+    "src",
+    "global.d.ts"
   ],
   "scripts": {
     "build": "tsup",
@@ -32,7 +33,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@jswork/react-list": "^1.2.3",
+    "@jswork/harmony-events": "^1.0.8",
     "@jswork/scrolled-event": "^1.0.5"
   },
   "keywords": [

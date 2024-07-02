@@ -1,7 +1,8 @@
-import ReactScrollspyNav, { ScrollspyTemplate } from '@jswork/react-scrollspy-nav/src';
+import ReactScrollspyNav from '@jswork/react-scrollspy-nav/src';
+import ReactList from '@jswork/react-list';
 import '@jswork/react-scrollspy-nav/src/style.scss';
 import cx from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -12,16 +13,29 @@ function App() {
   const [useRoot, setUseRoot] = useState(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [dom, setDom] = useState<HTMLDivElement | null>(null);
-
-  const template: ScrollspyTemplate = ({ item, index, active }, cb) => {
+  const template = ({ item, index, options }) => {
+    const active = index === options.activeIndex;
     return (
       <div
         className={cx({ 'btn-secondary': active }, 'btn btn-sm text-xl')}
         key={index}
-        onClick={cb}>
+        onClick={() => {
+          nx.$rcn.event.emit('@:anchor', index);
+          console.log('go to !', index);
+        }}>
         {item}
       </div>
     );
+  };
+  const navFn = (navRef, { activeIndex }) => {
+    return (
+      <ReactList
+        as="div"
+        className="navbar bg-base-100 sticky top-2 z-10 gap-2 rounded-md shadow-md"
+        forwardedRef={navRef} template={template} items={items}
+        options={{ activeIndex }}
+      />
+    ) as ReactNode;
   };
 
   useEffect(() => {
@@ -41,13 +55,10 @@ function App() {
       </label>
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
-        data-root={useRoot}
         offset={0}
         containerElement={useRoot ? dom : null}
-        items={items}
-        template={template}
-        className={cx('wp-8 p-5 mx-auto max-w-[600px] bg-slate-200')}
-        navClassName="navbar bg-base-100 sticky top-2 z-10 gap-2 rounded-md shadow-md">
+        nav={navFn}
+        className={cx('wp-8 p-5 mx-auto max-w-[600px] bg-slate-200')}>
         <ul>
           <h3 className="text-red-600" data-spy-id="home" id="home">
             Home

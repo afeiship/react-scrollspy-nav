@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
-import ReactList, { TemplateArgs, ReactListProps } from '@jswork/react-list';
 import ScrolledEvent, { EventResponse } from '@jswork/scrolled-event';
+import HarmonyEvents from '@jswork/harmony-events';
 
 const CLASS_NAME = 'react-scrollspy-nav';
 const Storage = {
@@ -16,43 +16,33 @@ const Storage = {
   },
 };
 
-export type ScrollspyTemplate = (
-  args: Partial<TemplateArgs> & { active: boolean },
-  cb: () => void
-) => ReactNode;
-
 export type ReactScrollspyNavProps = {
-  id?: string;
+  /**
+   * The unique id for component.
+   */
+  name?: string;
+  /**
+   * The harmony mode for component.
+   */
+  harmony?: boolean;
   /**
    * The extended className for component.
    * @default ''
    */
   className?: string;
   /**
-   * The className for nav element.
-   * @default ''
-   */
-  navClassName?: string;
-  /**
    * The container element for spy.
    */
   containerElement?: HTMLElement | null;
   /**
+   * The nav element.
+   * @param navRef
+   */
+  nav?: (navRef: React.RefObject<HTMLElement>, options: any) => ReactNode;
+  /**
    * The children element.
    */
   children?: ReactNode;
-  /**
-   * The items of spy navigation.
-   */
-  items: any[];
-  /**
-   * The template function for rendering each item.
-   */
-  template: ScrollspyTemplate;
-  /**
-   * The props for react-list component.
-   */
-  listProps?: Omit<ReactListProps, 'items' | 'template'>;
   /**
    * The offset for scroll spy.
    * @default 0
@@ -71,13 +61,15 @@ export default class ReactScrollspyNav extends Component<
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
   static defaultProps = {
-    id: '@',
+    name: '@',
     offset: 0,
   };
 
   private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
   private navRef: React.RefObject<HTMLDivElement> = React.createRef();
   private scrolledEvent: EventResponse | null = null;
+  private harmonyEvents: HarmonyEvents | null = null;
+
 
   get root() {
     return this.rootRef.current;
@@ -108,6 +100,13 @@ export default class ReactScrollspyNav extends Component<
     const { id } = props;
     const activeIndex = Storage.get(id!);
     this.state = { activeIndex };
+    this.harmonyEvents = new HarmonyEvents({
+      harmony: true,
+      name: props.name,
+      context: this,
+      ns: '$rcn',
+      items: ['anchor'],
+    });
   }
 
   initEvents = () => {
@@ -129,6 +128,7 @@ export default class ReactScrollspyNav extends Component<
 
   componentWillUnmount() {
     this.scrolledEvent?.destroy();
+    this.harmonyEvents?.destroy();
   }
 
   handleScroll = () => {
@@ -156,43 +156,22 @@ export default class ReactScrollspyNav extends Component<
     element.scrollIntoView({ behavior: 'smooth' });
   }
 
-  handleTemplate = ({ item, index }) => {
-    const { template } = this.props;
-    const { activeIndex } = this.state;
-    const active = index === activeIndex;
-    const cb = () => {
-      this.setState({ activeIndex: index });
-      this.scrollTo(this.spyElements[index]);
-    };
-    return template({ item, index, active }, cb);
-  };
+  anchor(index: number) {
+    this.setState({ activeIndex: index });
+    this.scrollTo(this.spyElements[index]);
+  }
 
   render() {
-    const {
-      className,
-      children,
-      items,
-      template,
-      listProps,
-      navClassName,
-      offset,
-      containerElement,
-      ...rest
-    } = this.props;
+    const { className, nav, children, offset, containerElement, ...rest } = this.props;
+    const { activeIndex } = this.state;
+
     return (
       <section
         ref={this.rootRef}
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
         {...rest}>
-        <ReactList
-          as="div"
-          className={navClassName}
-          forwardedRef={this.navRef}
-          items={items}
-          template={this.handleTemplate}
-          {...listProps}
-        />
+        {nav && nav(this.navRef, { activeIndex })}
         {children}
       </section>
     );
