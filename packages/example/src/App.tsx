@@ -1,9 +1,8 @@
 import ReactScrollspyNav from '@jswork/react-scrollspy-nav/src';
-import ReactList from '@jswork/react-list';
 import ReactSlideNav from '@jswork/react-slide-nav';
 import '@jswork/react-scrollspy-nav/src/style.scss';
 import cx from 'classnames';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -34,10 +33,12 @@ function App() {
       <ReactScrollspyNav
         offset={0}
         containerElement={useRoot ? dom : null}
-        nav={(navRef, options) => {
+        nav={(navRef) => {
           // console.log('navRef: ', navRef, 'options: ', options);
           return (
-            <div ref={navRef as React.RefObject<HTMLDivElement>} className="sticky top-0 nav-container">
+            <div
+              ref={navRef as React.RefObject<HTMLDivElement>}
+              className="sticky top-0 nav-container">
               <ReactSlideNav
                 items={items}
                 className="x-5 bg-blue-200 p-2 rounded-md"
