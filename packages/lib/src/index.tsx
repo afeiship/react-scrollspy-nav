@@ -128,10 +128,10 @@ export default class ReactScrollspyNav extends Component<
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(`[data-spy-id]`);
     if (!elNav || !elItems) return;
-    const bound = elNav.scrollTop;
+    const bound = elNav.getBoundingClientRect();
     const items = Array.from(elItems).map((el) => {
       const elBound = el.getBoundingClientRect();
-      return Math.abs(elBound.top - bound - offset!);
+      return Math.abs(elBound.top - bound.top - offset!);
     });
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
