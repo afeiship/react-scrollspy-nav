@@ -14,7 +14,7 @@ yarn add @jswork/react-scrollspy-nav
 ## usage
   ```js
   import ReactScrollspyNav from '@jswork/react-scrollspy-nav';
-  import ReactSlideNav from '@jswork/react-slide-nav';
+  import ReactList from '@jswork/react-list';
   import '@jswork/react-scrollspy-nav/dist/style.scss';
   import cx from 'classnames';
   import React, { useEffect, useState } from 'react';
@@ -48,20 +48,15 @@ yarn add @jswork/react-scrollspy-nav
         <ReactScrollspyNav
           offset={0}
           containerElement={useRoot ? dom : null}
-          nav={(navRef) => {
-            // console.log('navRef: ', navRef, 'options: ', options);
+          nav={(navRef, { activeIndex }) => {
             return (
               <div
                 ref={navRef as React.RefObject<HTMLDivElement>}
-                className="sticky top-0 nav-container">
-                <ReactSlideNav
-                  items={items}
-                  className="x-5 bg-blue-200 p-2 rounded-md"
-                  activeClassName="text-red-600"
-                  onItemClick={(idx) => {
-                    ReactScrollspyNav.event.emit('@:anchor', idx);
-                  }}
-                />
+                className="sticky top-0 nav-container bg-green-200 y-5 text-gray-80">
+                <ReactList items={items} template={({ item, index }) => {
+                  return <a key={index} href={`#${item.toLowerCase()}`}
+                            className={cx({ 'bg-red-500 text-white': index === activeIndex })}>{item}</a>;
+                }} />
               </div>
             );
           }}
