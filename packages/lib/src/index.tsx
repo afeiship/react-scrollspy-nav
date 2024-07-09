@@ -30,7 +30,7 @@ export type ReactScrollspyNavProps = {
   /**
    * The container element for spy.
    */
-  containerElement?: HTMLElement | null;
+  containerElement?: HTMLElement | Window;
   /**
    * The nav element.
    * @param navRef
@@ -101,9 +101,10 @@ export default class ReactScrollspyNav extends Component<
   }
 
   initEvents = () => {
-    const { name } = this.props;
+    const { name, containerElement } = this.props;
+    if (!containerElement) return;
     this.destroyEvents();
-    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: this.container! });
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: this.container });
     this.scrollTo(this.spyElements[this.state.activeIndex]);
     this.harmonyEvents = new ReactHarmonyEvents({ name, context: this });
   };
