@@ -23,6 +23,10 @@ export type ReactScrollspyNavProps = {
    */
   name?: string;
   /**
+   * The spy selector for spying.
+   */
+  spySelector?: string;
+  /**
    * The extended className for component.
    * @default ''
    */
@@ -30,7 +34,7 @@ export type ReactScrollspyNavProps = {
   /**
    * The container element for spy.
    */
-  containerElement?: HTMLElement | Window;
+  containerElement?: HTMLElement | Window | null;
   /**
    * The nav element.
    * @param navRef
@@ -61,6 +65,7 @@ export default class ReactScrollspyNav extends Component<
   static events = ['anchor'];
   static defaultProps = {
     name: '@',
+    spySelector: '[data-spy-id]',
     offset: 0,
   };
 
@@ -84,7 +89,8 @@ export default class ReactScrollspyNav extends Component<
   }
 
   get spyElements() {
-    return this.root?.querySelectorAll(`[data-spy-id]`) as NodeListOf<HTMLElement>;
+    const { spySelector } = this.props;
+    return this.root?.querySelectorAll(spySelector!) as NodeListOf<HTMLElement>;
   }
 
   get container() {
@@ -104,7 +110,9 @@ export default class ReactScrollspyNav extends Component<
     const { containerElement } = this.props;
     if (!containerElement) return;
     this.destroyEvents();
-    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element: this.container });
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, {
+      element: this.container as HTMLElement,
+    });
     this.scrollTo(this.spyElements[this.state.activeIndex]);
     this.harmonyEvents = new ReactHarmonyEvents(this);
   };
@@ -130,9 +138,9 @@ export default class ReactScrollspyNav extends Component<
   }
 
   handleScroll = () => {
-    const { id, offset } = this.props;
+    const { id, offset, spySelector } = this.props;
     const elNav = this.navRef.current;
-    const elItems = this.root!.querySelectorAll(`[data-spy-id]`);
+    const elItems = this.root!.querySelectorAll(spySelector!);
     if (!elNav || !elItems) return;
     const bound = elNav.getBoundingClientRect();
     const items = Array.from(elItems).map((el) => {
@@ -161,7 +169,7 @@ export default class ReactScrollspyNav extends Component<
   }
 
   render() {
-    const { className, nav, children, offset, containerElement, ...rest } = this.props;
+    const { className, nav, children, offset, containerElement, spySelector, ...rest } = this.props;
     const { activeIndex } = this.state;
 
     return (

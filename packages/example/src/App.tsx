@@ -2,7 +2,7 @@ import ReactScrollspyNav from '@jswork/react-scrollspy-nav/src';
 import ReactList from '@jswork/react-list';
 import '@jswork/react-scrollspy-nav/src/style.scss';
 import cx from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // @title: Tailwind classes used predict
 // @description: DO NOT DELETE THIS COMMENT
@@ -11,19 +11,14 @@ import React, { useEffect, useState } from 'react';
 function App() {
   const items = ['Home', 'About', 'Services', 'Contact'];
   const [useRoot, setUseRoot] = useState(true);
-  const containerRef = React.useRef<HTMLDivElement>(null);
   const [dom, setDom] = useState<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    setDom(containerRef.current);
-  }, [containerRef]);
 
   return (
     <div
       className={cx('m-10 p-6 shadow bg-gray-100 text-gray-80', {
         'h-[600px] overflow-y-auto': useRoot,
       })}
-      ref={containerRef}>
+      ref={(root) => setDom(root)}>
       <div className="badge badge-warning absolute right-0 top-0 m-4">Build Time: {BUILD_TIME}</div>
       <label htmlFor="">
         <span>UseRoot: {useRoot}</span>
@@ -31,17 +26,30 @@ function App() {
       </label>
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
-        offset={0}
-        containerElement={useRoot ? dom : null}
+        offset={20}
+        containerElement={dom}
         nav={(navRef, { activeIndex }) => {
           return (
             <div
               ref={navRef as React.RefObject<HTMLDivElement>}
-              className="sticky top-0 nav-container bg-green-200 y-5 text-gray-80">
-              <ReactList items={items} template={({ item, index }) => {
-                return <a key={index} href={`#${item.toLowerCase()}`}
-                          className={cx({ 'bg-red-500 text-white': index === activeIndex })}>{item}</a>;
-              }} />
+              className="sticky top-0 nav-container bg-green-200 x-5 text-gray-80">
+              <ReactList
+                items={items}
+                template={({ item, index }) => {
+                  return (
+                    <a
+                      key={index}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        ReactScrollspyNav.event.emit('@:anchor', index);
+                      }}
+                      href={`#${item.toLowerCase()}`}
+                      className={cx({ 'bg-red-500 text-white': index === activeIndex })}>
+                      {item}
+                    </a>
+                  );
+                }}
+              />
             </div>
           );
         }}
