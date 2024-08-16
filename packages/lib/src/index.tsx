@@ -101,7 +101,7 @@ export default class ReactScrollspyNav extends Component<
       element: this.container as HTMLElement,
     });
     this.scrollTo(this.spyElements[this.state.activeIndex]);
-    this.harmonyEvents = new ReactHarmonyEvents(this);
+    this.harmonyEvents = ReactHarmonyEvents.create(this);
   };
 
   destroyEvents = () => {
@@ -155,7 +155,8 @@ export default class ReactScrollspyNav extends Component<
   }
 
   render() {
-    const { className, name, nav, children, offset, containerElement, spySelector, ...rest } = this.props;
+    const { className, name, nav, children, offset, containerElement, spySelector, ...rest } =
+      this.props;
     const { activeIndex } = this.state;
 
     return (
