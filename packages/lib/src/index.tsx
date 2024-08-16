@@ -67,6 +67,7 @@ export default class ReactScrollspyNav extends Component<
   private navRef: React.RefObject<HTMLDivElement> = React.createRef();
   private scrolledEvent: EventResponse | null = null;
   private harmonyEvents: ReactHarmonyEvents | null = null;
+  private isScrolling = false;
 
   get root() {
     return this.rootRef.current;
@@ -112,6 +113,7 @@ export default class ReactScrollspyNav extends Component<
   destroyEvents = () => {
     this.scrolledEvent?.destroy();
     this.harmonyEvents?.destroy();
+    this.isScrolling = false;
   };
 
   componentDidMount() {
@@ -130,6 +132,7 @@ export default class ReactScrollspyNav extends Component<
   }
 
   handleScroll = () => {
+    if (this.isScrolling) return;
     const { offset, disabled, spySelector } = this.props;
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(spySelector!);
@@ -145,6 +148,7 @@ export default class ReactScrollspyNav extends Component<
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
+    this.isScrolling = true;
   };
 
   scrollTo = (element?: HTMLElement) => {
