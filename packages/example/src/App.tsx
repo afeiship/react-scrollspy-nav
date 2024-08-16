@@ -27,6 +27,7 @@ function App() {
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         offset={20}
+        threshold={100}
         containerElement={dom}
         nav={(navRef, { activeIndex }) => {
           return (

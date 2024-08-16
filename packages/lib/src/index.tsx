@@ -2,7 +2,7 @@ import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
 import ScrolledEvent, { EventResponse } from '@jswork/scrolled-event';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
-import { throttle } from 'throttle-debounce';
+import { debounce } from 'throttle-debounce';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-scrollspy-nav';
@@ -18,9 +18,9 @@ export type ReactScrollspyNavProps = {
    */
   disabled?: boolean;
   /**
-   * The throttle for scroll event.
+   * The threshold for scroll event.
    */
-  throttle?: number;
+  threshold?: number;
   /**
    * The spy selector for spying.
    */
@@ -102,7 +102,7 @@ export default class ReactScrollspyNav extends Component<
   constructor(props: ReactScrollspyNavProps) {
     super(props);
     this.state = { activeIndex: 0 };
-    this.scrollToThrottle = throttle(props.throttle || 200, this.scrollTo);
+    this.scrollToThrottle = debounce(props.threshold || 200, this.scrollTo);
   }
 
   initEvents = () => {
@@ -174,6 +174,7 @@ export default class ReactScrollspyNav extends Component<
     const {
       className,
       name,
+      threshold,
       disabled,
       nav,
       children,
