@@ -102,18 +102,16 @@ export default class ReactScrollspyNav extends Component<
   initEvents = () => {
     const { containerElement } = this.props;
     if (!containerElement) return;
+    const element = this.container as HTMLElement;
     this.destroyEvents();
-    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, {
-      element: this.container as HTMLElement,
-    });
-    // this.scrollTo(this.spyElements[this.state.activeIndex]);
+    this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element });
     this.harmonyEvents = ReactHarmonyEvents.create(this);
+    element?.addEventListener('scrolled', this.handleScrollEnd);
   };
 
   destroyEvents = () => {
     this.scrolledEvent?.destroy();
     this.harmonyEvents?.destroy();
-    this.isScrolling = false;
   };
 
   componentDidMount() {
@@ -129,6 +127,7 @@ export default class ReactScrollspyNav extends Component<
 
   componentWillUnmount() {
     this.destroyEvents();
+    this.container?.removeEventListener('scrolled', this.handleScrollEnd);
   }
 
   handleScroll = () => {
@@ -149,6 +148,10 @@ export default class ReactScrollspyNav extends Component<
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
     this.isScrolling = true;
+  };
+
+  handleScrollEnd = () => {
+    this.isScrolling = false;
   };
 
   scrollTo = (element?: HTMLElement) => {
