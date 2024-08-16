@@ -157,7 +157,7 @@ export default class ReactScrollspyNav extends Component<
     const styleTop = this.navTop + this.containerPaddingTop;
     const navOffset = styleTop + offset!;
     element.style.scrollMarginTop = navOffset + 'px';
-    element.scrollIntoView({ behavior });
+    element.scrollIntoView({ behavior: behavior! });
   };
 
   // ------- public methods for harmony events -------
