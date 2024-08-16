@@ -12,6 +12,11 @@ export type ReactScrollspyNavProps = {
    */
   name?: string;
   /**
+   * Whether disabled.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * The spy selector for spying.
    */
   spySelector?: string;
@@ -129,16 +134,19 @@ export default class ReactScrollspyNav extends Component<
   }
 
   handleScroll = () => {
-    const { offset, spySelector } = this.props;
+    const { offset, disabled, spySelector } = this.props;
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(spySelector!);
+    if (disabled) return;
     if (!this.isMounted) return;
     if (!elNav || !elItems) return;
+
     const bound = elNav.getBoundingClientRect();
     const items = Array.from(elItems).map((el) => {
       const elBound = el.getBoundingClientRect();
       return Math.abs(elBound.top - bound.top - offset!);
     });
+
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
@@ -146,7 +154,8 @@ export default class ReactScrollspyNav extends Component<
 
   scrollTo(element?: HTMLElement) {
     if (!element) return;
-    const { offset } = this.props;
+    const { offset, disabled } = this.props;
+    if (disabled) return;
     const styleTop = this.navTop + this.containerPaddingTop;
     const navOffset = styleTop + offset!;
     element.style.scrollMarginTop = navOffset + 'px';
@@ -160,8 +169,18 @@ export default class ReactScrollspyNav extends Component<
   }
 
   render() {
-    const { className, name, nav, children, offset, containerElement, spySelector, ...rest } =
-      this.props;
+    const {
+      className,
+      name,
+      disabled,
+      nav,
+      children,
+      offset,
+      containerElement,
+      spySelector,
+      ...rest
+    } = this.props;
+
     const { activeIndex } = this.state;
 
     return (
