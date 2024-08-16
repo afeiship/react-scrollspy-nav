@@ -5,17 +5,6 @@ import { ReactHarmonyEvents } from '@jswork/harmony-events';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-scrollspy-nav';
-const Storage = {
-  getKey: (id: string) => [CLASS_NAME, id].filter(Boolean).join(':'),
-  set: (id: string, value: number) => {
-    const key = Storage.getKey(id);
-    localStorage.setItem(key, value.toString());
-  },
-  get: (id: string) => {
-    const key = Storage.getKey(id);
-    return parseInt(localStorage.getItem(key) as string) || 0;
-  },
-};
 
 export type ReactScrollspyNavProps = {
   /**
@@ -101,9 +90,7 @@ export default class ReactScrollspyNav extends Component<
 
   constructor(props: ReactScrollspyNavProps) {
     super(props);
-    const { id } = props;
-    const activeIndex = Storage.get(id!);
-    this.state = { activeIndex };
+    this.state = { activeIndex: 0 };
   }
 
   initEvents = () => {
@@ -138,7 +125,7 @@ export default class ReactScrollspyNav extends Component<
   }
 
   handleScroll = () => {
-    const { id, offset, spySelector } = this.props;
+    const { offset, spySelector } = this.props;
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(spySelector!);
     if (!elNav || !elItems) return;
@@ -150,7 +137,6 @@ export default class ReactScrollspyNav extends Component<
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
-    Storage.set(id!, activeIndex);
   };
 
   scrollTo(element?: HTMLElement) {
@@ -169,12 +155,13 @@ export default class ReactScrollspyNav extends Component<
   }
 
   render() {
-    const { className, nav, children, offset, containerElement, spySelector, ...rest } = this.props;
+    const { className, name, nav, children, offset, containerElement, spySelector, ...rest } = this.props;
     const { activeIndex } = this.state;
 
     return (
       <section
         ref={this.rootRef}
+        data-name={name}
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
         {...rest}>
