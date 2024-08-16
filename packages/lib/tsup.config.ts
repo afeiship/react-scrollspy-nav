@@ -13,7 +13,14 @@ export default defineConfig({
   splitting: true,
   target: 'es6',
   bundle: true,
-  external: ['react', 'react-dom', '@jswork/scrolled-event', '@jswork/harmony-events', 'classnames'],
+  external: [
+    'react',
+    'react-dom',
+    '@jswork/scrolled-event',
+    '@jswork/harmony-events',
+    'classnames',
+    'throttle-debounce',
+  ],
   loader: {
     '.svg': 'dataurl',
   },

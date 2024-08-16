@@ -2,6 +2,7 @@ import cx from 'classnames';
 import React, { ReactNode, Component, HTMLAttributes } from 'react';
 import ScrolledEvent, { EventResponse } from '@jswork/scrolled-event';
 import { ReactHarmonyEvents } from '@jswork/harmony-events';
+import { throttle } from 'throttle-debounce';
 import type { EventMittNamespace } from '@jswork/event-mitt';
 
 const CLASS_NAME = 'react-scrollspy-nav';
@@ -16,6 +17,10 @@ export type ReactScrollspyNavProps = {
    * @default false
    */
   disabled?: boolean;
+  /**
+   * The throttle for scroll event.
+   */
+  throttle?: number;
   /**
    * The spy selector for spying.
    */
@@ -67,7 +72,7 @@ export default class ReactScrollspyNav extends Component<
   private navRef: React.RefObject<HTMLDivElement> = React.createRef();
   private scrolledEvent: EventResponse | null = null;
   private harmonyEvents: ReactHarmonyEvents | null = null;
-  private isMounted: boolean = false;
+  private scrollToThrottle: any;
 
   get root() {
     return this.rootRef.current;
@@ -97,7 +102,7 @@ export default class ReactScrollspyNav extends Component<
   constructor(props: ReactScrollspyNavProps) {
     super(props);
     this.state = { activeIndex: 0 };
-    this.isMounted = false;
+    this.scrollToThrottle = throttle(props.throttle || 200, this.scrollTo);
   }
 
   initEvents = () => {
@@ -118,7 +123,6 @@ export default class ReactScrollspyNav extends Component<
 
   componentDidMount() {
     this.initEvents();
-    this.isMounted = true;
   }
 
   componentDidUpdate(prevProps: Readonly<ReactScrollspyNavProps>) {
@@ -130,7 +134,6 @@ export default class ReactScrollspyNav extends Component<
 
   componentWillUnmount() {
     this.destroyEvents();
-    this.isMounted = false;
   }
 
   handleScroll = () => {
@@ -138,7 +141,6 @@ export default class ReactScrollspyNav extends Component<
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(spySelector!);
     if (disabled) return;
-    if (!this.isMounted) return;
     if (!elNav || !elItems) return;
 
     const bound = elNav.getBoundingClientRect();
@@ -152,7 +154,7 @@ export default class ReactScrollspyNav extends Component<
     this.setState({ activeIndex });
   };
 
-  scrollTo(element?: HTMLElement) {
+  scrollTo = (element?: HTMLElement) => {
     if (!element) return;
     const { offset, disabled } = this.props;
     if (disabled) return;
@@ -160,12 +162,12 @@ export default class ReactScrollspyNav extends Component<
     const navOffset = styleTop + offset!;
     element.style.scrollMarginTop = navOffset + 'px';
     element.scrollIntoView({ behavior: 'smooth' });
-  }
+  };
 
   // ------- public methods for harmony events -------
   anchor(index: number) {
     this.setState({ activeIndex: index });
-    this.scrollTo(this.spyElements[index]);
+    this.scrollToThrottle(this.spyElements[index]);
   }
 
   render() {
