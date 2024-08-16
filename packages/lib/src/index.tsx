@@ -107,7 +107,7 @@ export default class ReactScrollspyNav extends Component<
     this.scrolledEvent = ScrolledEvent.on(this.handleScroll, {
       element: this.container as HTMLElement,
     });
-    this.scrollTo(this.spyElements[this.state.activeIndex]);
+    // this.scrollTo(this.spyElements[this.state.activeIndex]);
     this.harmonyEvents = ReactHarmonyEvents.create(this);
   };
 
