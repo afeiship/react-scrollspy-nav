@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "@jswork/harmony-events": "^1.2.2",
-    "@jswork/scrolled-event": "^1.0.6",
-    "throttle-debounce": "^5.0.2"
+    "@jswork/scrolled-event": "^1.0.6"
   },
   "keywords": [
     "react",

@@ -18,8 +18,7 @@ export default defineConfig({
     'react-dom',
     '@jswork/scrolled-event',
     '@jswork/harmony-events',
-    'classnames',
-    'throttle-debounce',
+    'classnames'
   ],
   loader: {
     '.svg': 'dataurl',
