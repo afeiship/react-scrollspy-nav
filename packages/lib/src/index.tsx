@@ -12,6 +12,10 @@ export type ReactScrollspyNavProps = {
    */
   name?: string;
   /**
+   * The scroll behavior.
+   */
+  behavior?: 'auto' | 'smooth' | 'instant';
+  /**
    * Whether disabled.
    * @default false
    */
@@ -61,13 +65,13 @@ export default class ReactScrollspyNav extends Component<
     name: '@',
     spySelector: '[data-spy-id]',
     offset: 0,
+    behavior: 'smooth',
   };
 
   private rootRef: React.RefObject<HTMLDivElement> = React.createRef();
   private navRef: React.RefObject<HTMLDivElement> = React.createRef();
   private scrolledEvent: EventResponse | null = null;
   private harmonyEvents: ReactHarmonyEvents | null = null;
-  private isScrolling = false;
 
   get root() {
     return this.rootRef.current;
@@ -106,7 +110,6 @@ export default class ReactScrollspyNav extends Component<
     this.destroyEvents();
     this.scrolledEvent = ScrolledEvent.on(this.handleScroll, { element });
     this.harmonyEvents = ReactHarmonyEvents.create(this);
-    element?.addEventListener('scrolled', this.handleScrollEnd);
   };
 
   destroyEvents = () => {
@@ -127,11 +130,9 @@ export default class ReactScrollspyNav extends Component<
 
   componentWillUnmount() {
     this.destroyEvents();
-    this.container?.removeEventListener('scrolled', this.handleScrollEnd);
   }
 
   handleScroll = () => {
-    if (this.isScrolling) return;
     const { offset, disabled, spySelector } = this.props;
     const elNav = this.navRef.current;
     const elItems = this.root!.querySelectorAll(spySelector!);
@@ -147,21 +148,16 @@ export default class ReactScrollspyNav extends Component<
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
     this.setState({ activeIndex });
-    this.isScrolling = true;
-  };
-
-  handleScrollEnd = () => {
-    this.isScrolling = false;
   };
 
   scrollTo = (element?: HTMLElement) => {
     if (!element) return;
-    const { offset, disabled } = this.props;
+    const { offset, disabled, behavior } = this.props;
     if (disabled) return;
     const styleTop = this.navTop + this.containerPaddingTop;
     const navOffset = styleTop + offset!;
     element.style.scrollMarginTop = navOffset + 'px';
-    element.scrollIntoView({ behavior: 'smooth' });
+    element.scrollIntoView({ behavior });
   };
 
   // ------- public methods for harmony events -------
@@ -174,6 +170,7 @@ export default class ReactScrollspyNav extends Component<
     const {
       className,
       name,
+      behavior,
       disabled,
       nav,
       children,
