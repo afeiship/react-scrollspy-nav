@@ -135,7 +135,7 @@ export default class ReactScrollspyNav extends Component<
   handleScroll = () => {
     const { offset, disabled, spySelector } = this.props;
     const elNav = this.navRef.current;
-    const elItems = this.root!.querySelectorAll(spySelector!);
+    const elItems = this.root?.querySelectorAll(spySelector!);
     if (disabled) return;
     if (!elNav || !elItems) return;
 
