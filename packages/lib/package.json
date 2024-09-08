@@ -36,7 +36,7 @@
     "@jswork/scrolled-event": "^1.0.6"
   },
   "peerDependencies": {
-    "@jswork/harmony-events": "^1.2.5"
+    "@jswork/harmony-events": "^1.2.7"
   },
   "keywords": [
     "react",
