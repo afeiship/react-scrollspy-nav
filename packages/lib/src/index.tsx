@@ -47,6 +47,11 @@ export type ReactScrollspyNavProps = {
    * @default 0
    */
   offset?: number;
+  /**
+   * The onChange callback.
+   * @param index
+   */
+  onChange?: (index: number) => void;
 } & HTMLAttributes<HTMLDivElement>;
 
 interface ReactScrollspyNavState {
@@ -133,7 +138,7 @@ export default class ReactScrollspyNav extends Component<
   }
 
   handleScroll = () => {
-    const { offset, disabled, spySelector } = this.props;
+    const { offset, disabled, spySelector, onChange } = this.props;
     const elNav = this.navRef.current;
     const elItems = this.root?.querySelectorAll(spySelector!);
     if (disabled) return;
@@ -147,7 +152,9 @@ export default class ReactScrollspyNav extends Component<
 
     const min = Math.min(...items);
     const activeIndex = items.indexOf(min);
-    this.setState({ activeIndex });
+    this.setState({ activeIndex }, () => {
+      onChange?.(activeIndex);
+    });
   };
 
   scrollTo = (element?: HTMLElement) => {
@@ -177,6 +184,7 @@ export default class ReactScrollspyNav extends Component<
       offset,
       containerElement,
       spySelector,
+      onClick,
       ...rest
     } = this.props;
 
