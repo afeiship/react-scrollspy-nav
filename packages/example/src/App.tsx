@@ -13,6 +13,8 @@ function App() {
   const [useRoot, setUseRoot] = useState(true);
   const [dom, setDom] = useState<HTMLDivElement | null>(null);
 
+  console.log('sdom: ', dom);
+
   return (
     <div
       className={cx('m-10 p-6 shadow bg-gray-100 text-gray-80', {
@@ -27,7 +29,6 @@ function App() {
       <h1>react-scrollspy-nav</h1>
       <ReactScrollspyNav
         offset={20}
-        threshold={100}
         containerElement={dom}
         nav={(navRef, { activeIndex }) => {
           return (
