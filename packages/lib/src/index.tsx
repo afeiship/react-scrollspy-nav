@@ -185,6 +185,7 @@ export default class ReactScrollspyNav extends Component<
     return (
       <section
         ref={this.rootRef}
+        data-active-index={activeIndex}
         data-name={name}
         data-component={CLASS_NAME}
         className={cx(CLASS_NAME, className)}
